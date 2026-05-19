@@ -123,6 +123,7 @@ const currentPath = Astro.url.pathname;
 
   .logo-image {
     height: 2.5rem;
+    max-height: 2.5rem;
     width: auto;
   }
 
@@ -425,7 +426,8 @@ const currentPath = Astro.url.pathname;
     .main-nav {
       display: flex;
       align-items: center;
-      flex-basis: auto;
+      flex: 1;
+      justify-content: center;
       background: none;
       border: none;
       order: 1;
@@ -483,7 +485,6 @@ const currentPath = Astro.url.pathname;
       display: inline-block;
       order: 2;
       flex-shrink: 0;
-      margin-left: auto;
     }
 
     /* Desktop: transparent nav must NOT have solid mobile background */

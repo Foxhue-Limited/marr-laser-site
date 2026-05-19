@@ -1,5 +1,6 @@
 ---
 import type { TeamMember } from '@foxhue/shared';
+import { sanityImageUrl } from '@lib/image';
 
 interface Props {
   members: TeamMember[];
@@ -14,6 +15,11 @@ const teamFallbackPhotos: Record<string, string> = {
   'Katie': '/images/team/katie.jpg',
 };
 
+function getTeamPhoto(member: TeamMember): string {
+  if (member.photo?.image) return sanityImageUrl(member.photo.image, 240, 240);
+  return teamFallbackPhotos[member.name] || '/placeholders/team.svg';
+}
+
 const displayMembers = members.slice(0, 4);
 ---
 
@@ -26,7 +32,7 @@ const displayMembers = members.slice(0, 4);
           <li class="teaser-item">
             <div class="teaser-photo-wrap">
               <img
-                src={teamFallbackPhotos[member.name] || '/placeholders/team.svg'}
+                src={getTeamPhoto(member)}
                 alt={`Photo of ${member.name}`}
                 width="120"
                 height="120"

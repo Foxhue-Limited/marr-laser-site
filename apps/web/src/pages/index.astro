@@ -34,23 +34,23 @@ const testimonials: Testimonial[] = await sanityClient.fetch(testimonialsQuery);
     secondaryCtaUrl="/services"
   />
 
+  {services?.length > 0 && (
+    <ServicesGrid services={services} heading="Featured Treatments" />
+  )}
+
   <PathwayCards />
 
   <ClinicFeature />
 
   <TechnologySection />
 
-  {services?.length > 0 && (
-    <ServicesGrid services={services} heading="Featured Treatments" />
-  )}
-
-  <VideoShowcase
+  {/* <VideoShowcase
     videos={[
       { id: 'dQw4w9WgXcQ', title: 'Welcome to MARR Laser & Skin Clinic' },
       { id: 'dQw4w9WgXcQ', title: 'Laser Hair Removal Treatment Demo' },
       { id: 'dQw4w9WgXcQ', title: 'Client Transformation Stories' },
     ]}
-  />
+  /> */}
 
   {testimonials?.length > 0 && (
     <Testimonials testimonials={testimonials} />
