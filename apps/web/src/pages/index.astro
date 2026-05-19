@@ -23,7 +23,7 @@ const services: Service[] = await sanityClient.fetch(featuredServicesQuery);
 const testimonials: Testimonial[] = await sanityClient.fetch(testimonialsQuery);
 ---
 
-<BaseLayout transparentHeader>
+<BaseLayout>
   <Hero
     eyebrow="Advanced Skin Care"
     heading={settings?.siteName ?? 'MARR Laser & Skin Clinic'}
