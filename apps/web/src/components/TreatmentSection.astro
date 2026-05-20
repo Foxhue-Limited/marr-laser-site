@@ -19,7 +19,7 @@ const { sections } = Astro.props;
   {sections.map((section, i) => {
     const isReversed = i % 2 === 1;
     return (
-      <div class={`treatment-row${isReversed ? ' treatment-row--reversed' : ''}`}>
+      <div class={`treatment-row reveal${isReversed ? ' treatment-row--reversed' : ''}`}>
         <div class="treatment-row__image">
           <img
             src={section.image.src}
@@ -43,7 +43,7 @@ const { sections } = Astro.props;
   .treatment-sections {
     display: flex;
     flex-direction: column;
-    gap: var(--space-16);
+    gap: var(--space-24);
     padding-bottom: var(--space-16);
   }
 

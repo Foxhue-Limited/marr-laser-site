@@ -152,10 +152,30 @@ button { cursor: pointer; }
 .prose a { color: var(--color-primary); text-decoration: underline; }
 .prose a:hover { color: var(--color-primary-dark); }
 
+/* ----------------------------------------------------------------------- */
+/* Scroll reveal — fade-up animation                                       */
+/* ----------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -116,17 +116,19 @@ if (hasSections) {
   description={service.seo?.description ?? service.excerpt}
 >
   <article class="service-detail">
-    <div class="service-hero">
-      {service.image ? (
-        <SanityImage
-          source={service.image.image}
-          alt={service.image.alt}
-          width={1200}
-          height={600}
-        />
-      ) : (
-        <img src={fallbackHero} alt={service.title} width={1200} height={600} loading="eager" decoding="async" />
-      )}
+    <div class="service-hero-wrapper">
+      <div class="service-hero">
+        {service.image ? (
+          <SanityImage
+            source={service.image.image}
+            alt={service.image.alt}
+            width={1200}
+            height={600}
+          />
+        ) : (
+          <img src={fallbackHero} alt={service.title} width={1200} height={600} loading="eager" decoding="async" />
+        )}
+      </div>
     </div>
 
     <div class="container">
@@ -170,8 +172,14 @@ if (hasSections) {
     padding-bottom: var(--space-20);
   }
 
+  .service-hero-wrapper {
+    background-color: var(--color-accent);
+  }
+
   .service-hero {
     width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
     aspect-ratio: 16 / 5;
     max-height: 480px;
     overflow: hidden;
