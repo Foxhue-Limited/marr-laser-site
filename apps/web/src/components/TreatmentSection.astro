@@ -1,0 +1,92 @@
+---
+import PortableText from '@components/PortableText.astro';
+import type { SanityBlock } from '@foxhue/shared';
+
+interface Section {
+  heading: string;
+  blocks: SanityBlock[];
+  image: { src: string; alt: string };
+}
+
+interface Props {
+  sections: Section[];
+}
+
+const { sections } = Astro.props;
+---
+
+<div class="treatment-sections">
+  {sections.map((section, i) => {
+    const isReversed = i % 2 === 1;
+    return (
+      <div class={`treatment-row${isReversed ? ' treatment-row--reversed' : ''}`}>
+        <div class="treatment-row__image">
+          <img
+            src={section.image.src}
+            alt={section.image.alt}
+            width={600}
+            height={400}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="treatment-row__content">
+          <h2>{section.heading}</h2>
+          <PortableText value={section.blocks} />
+        </div>
+      </div>
+    );
+  })}
+</div>
+
+<style>
+  .treatment-sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+
+  .treatment-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+    align-items: center;
+  }
+
+  .treatment-row__image {
+    order: 0;
+  }
+
+  .treatment-row__image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    display: block;
+    border: 3px solid var(--color-secondary);
+    border-radius: 15px;
+  }
+
+  .treatment-row__content {
+    order: 1;
+  }
+
+  @media (min-width: 768px) {
+    .treatment-row {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+    }
+
+    .treatment-row--reversed .treatment-row__image {
+      order: 1;
+    }
+
+    .treatment-row--reversed .treatment-row__content {
+      order: 0;
+    }
+  }
+</style>

@@ -2,10 +2,11 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SanityImage from '@components/SanityImage.astro';
 import PortableText from '@components/PortableText.astro';
+import TreatmentSection from '@components/TreatmentSection.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { sanityClient } from '@lib/sanity';
 import { servicesQuery, serviceBySlugQuery } from '@lib/queries';
-import type { Service } from '@foxhue/shared';
+import type { Service, SanityBlock } from '@foxhue/shared';
 
 export async function getStaticPaths() {
   const services: Service[] = await sanityClient.fetch(servicesQuery);
@@ -24,12 +25,90 @@ if (!service) {
 
 const serviceFallbackHeroes: Record<string, string> = {
   'laser-treatments': '/images/services/laser-hero.jpg',
-  'skin-treatments': '/images/services/skin-hero.jpg',
+  'skin-treatments': '/images/services/skin-hero.webp',
   'aesthetic-treatments': '/images/services/aesthetic-hero.jpg',
   'pmu-treatments': '/images/services/pmu-hero.jpg',
-  'caci-treatments': '/images/services/caci-hero.jpg',
+  'caci-treatments': '/images/services/caci-hero.webp',
 };
 const fallbackHero = serviceFallbackHeroes[slug as string] || '/placeholders/service-hero.svg';
+
+/* ── Section image maps per slug ── */
+const sectionImageMap: Record<string, { src: string; alt: string }[]> = {
+  'laser-treatments': [
+    { src: '/images/services/laser/laser-hair-removal.webp', alt: 'Laser hair removal treatment' },
+    { src: '/images/services/laser/pigmented.webp', alt: 'Pigmented lesion treatment' },
+    { src: '/images/services/laser/thread-vein.webp', alt: 'Thread vein removal treatment' },
+    { src: '/images/services/laser/fungal-nail.webp', alt: 'Fungal nail treatment' },
+    { src: '/images/services/laser/moveo.webp', alt: 'Skin rejuvenation with Moveo SR' },
+  ],
+  'skin-treatments': [
+    { src: '/images/services/skin/hifu.webp', alt: 'HIFU treatment' },
+    { src: '/images/services/skin/radio-frequency.webp', alt: 'RF microneedling treatment' },
+    { src: '/images/services/skin/illuminfacial.webp', alt: 'IllumiFacial treatment' },
+    { src: '/images/services/skin/acne.webp', alt: 'Acne treatment' },
+    { src: '/images/services/skin/biorepeel.webp', alt: 'BioRePeel treatment' },
+    { src: '/images/services/skin/image-skincare.webp', alt: 'IMAGE Skincare designer peels' },
+    { src: '/images/services/skin/dermalux.webp', alt: 'Dermalux LED phototherapy treatment' },
+  ],
+  'aesthetic-treatments': [
+    { src: '/images/services/aesthetic/anti-ageing.jpg', alt: 'Anti-ageing treatments' },
+    { src: '/images/services/aesthetic/lip-enhancement.jpg', alt: 'Lip enhancement treatment' },
+    { src: '/images/services/aesthetic/tear-trough.jpg', alt: 'Tear trough filler treatment' },
+    { src: '/images/services/aesthetic/facial-contouring.png', alt: 'Facial contouring treatment' },
+    { src: '/images/services/aesthetic/nasolabial.jpg', alt: 'Nasolabial fold and marionette lines treatment' },
+    { src: '/images/services/aesthetic/perioral.jpg', alt: 'Perioral lines treatment' },
+    { src: '/images/services/aesthetic/profhilo.jpg', alt: 'Profhilo treatment' },
+  ],
+  'pmu-treatments': [
+    { src: '/images/services/pmu/barely-there-brows.webp', alt: 'Barely there brows treatment' },
+    { src: '/images/services/pmu/microblading.webp', alt: 'Microblading treatment' },
+    { src: '/images/services/pmu/ombre-brows.webp', alt: 'Ombre brows treatment' },
+    { src: '/images/services/pmu/combination-brows.webp', alt: 'Combination brows treatment' },
+  ],
+  'caci-treatments': [
+    { src: '/images/services/caci/signature-facial.webp', alt: 'CACI signature non-surgical facial treatment' },
+    { src: '/images/services/caci/microdermabrasion.webp', alt: 'CACI microdermabrasion treatment' },
+    { src: '/images/services/caci/ultimate-facial.webp', alt: 'CACI ultimate non-surgical facial treatment' },
+    { src: '/images/services/caci/jowl-lift.webp', alt: 'CACI jowl lift treatment' },
+    { src: '/images/services/caci/eye-revive.webp', alt: 'CACI eye revive treatment' },
+    { src: '/images/services/caci/hand-rejuvenation.webp', alt: 'CACI hand rejuvenation treatment' },
+  ],
+};
+
+/* ── Split body at h2 headings ── */
+function splitByH2(blocks: SanityBlock[]): { intro: SanityBlock[]; sections: { heading: string; blocks: SanityBlock[] }[] } {
+  const intro: SanityBlock[] = [];
+  const sections: { heading: string; blocks: SanityBlock[] }[] = [];
+  let current: { heading: string; blocks: SanityBlock[] } | null = null;
+
+  for (const block of blocks) {
+    if (block._type === 'block' && block.style === 'h2') {
+      const heading = (block.children ?? []).map((c) => c.text ?? '').join('');
+      current = { heading, blocks: [] };
+      sections.push(current);
+    } else if (current) {
+      current.blocks.push(block);
+    } else {
+      intro.push(block);
+    }
+  }
+
+  return { intro, sections };
+}
+
+const images = sectionImageMap[slug as string];
+const hasSections = !!(images && service.body);
+
+let introBlocks: SanityBlock[] = [];
+let treatmentSections: { heading: string; blocks: SanityBlock[]; image: { src: string; alt: string } }[] = [];
+if (hasSections) {
+  const { intro, sections: groups } = splitByH2(service.body!);
+  introBlocks = intro;
+  treatmentSections = groups.map((group, i) => ({
+    ...group,
+    image: images[i] || { src: '', alt: '' },
+  }));
+}
 ---
 
 <BaseLayout
@@ -66,11 +145,20 @@ const fallbackHero = serviceFallbackHeroes[slug as string] || '/placeholders/ser
         )}
       </div>
 
-      {service.body && (
+      {hasSections && treatmentSections.length > 0 ? (
+        <>
+          {introBlocks.length > 0 && (
+            <div class="service-body prose">
+              <PortableText value={introBlocks} />
+            </div>
+          )}
+          <TreatmentSection sections={treatmentSections} />
+        </>
+      ) : service.body ? (
         <div class="service-body prose">
           <PortableText value={service.body} />
         </div>
-      )}
+      ) : null}
     </div>
 
     <CTABanner />
@@ -124,5 +212,11 @@ const fallbackHero = serviceFallbackHeroes[slug as string] || '/placeholders/ser
 
   .service-body {
     padding-bottom: var(--space-16);
+  }
+
+  /* PortableText inline images (for non-sectioned pages) */
+  .service-body :global(img) {
+    border: 3px solid var(--color-secondary);
+    border-radius: 15px;
   }
 </style>

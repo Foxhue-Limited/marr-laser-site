@@ -20,7 +20,7 @@ const serviceFallbackCards: Record<string, string> = {
 
 <section class="services-section" aria-labelledby="services-heading">
   <div class="container">
-    <h2 id="services-heading" class="section-heading">{heading}</h2>
+    {heading && <h2 id="services-heading" class="section-heading">{heading}</h2>}
     {services.length > 0 ? (
       <ul class="services-grid" role="list">
         {services.map((service) => (
