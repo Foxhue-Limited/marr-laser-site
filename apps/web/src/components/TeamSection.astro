@@ -49,6 +49,7 @@ function padIndex(i: number): string {
         const snippet = extractFirstParagraph(member.bio);
         const expandable = hasExpandableContent(member);
         const isReversed = i % 2 === 1;
+        const accordionId = `accordion-${member._id}`;
         return (
           <article class={`team-row${isReversed ? ' team-row--reversed' : ''}`}>
             {/* Photo column */}
@@ -107,11 +108,48 @@ function padIndex(i: number): string {
                 <button
                   type="button"
                   class="team-row__cta"
-                  data-drawer-trigger={member._id}
+                  data-accordion-trigger={accordionId}
+                  aria-expanded="false"
+                  aria-controls={accordionId}
                   aria-label={`Read full profile for ${member.name}`}
                 >
-                  Read full profile <span aria-hidden="true">&rarr;</span>
+                  <span class="team-row__cta-text">Read full profile</span> <span class="team-row__cta-arrow" aria-hidden="true">&darr;</span>
                 </button>
+              )}
+
+              {/* Inline accordion panel */}
+              {expandable && (
+                <div class="team-row__expand" id={accordionId} hidden>
+                  <div class="team-row__expand-inner">
+                    {member.bio && member.bio.length > 0 && (
+                      <div class="team-row__section">
+                        <p class="team-row__section-label">Biography</p>
+                        <div class="team-row__full-bio">
+                          <PortableText value={member.bio} />
+                        </div>
+                      </div>
+                    )}
+
+                    {member.qualifications && member.qualifications.length > 0 && (
+                      <div class="team-row__section">
+                        <p class="team-row__section-label">Qualifications</p>
+                        <ul class="team-row__tags" role="list">
+                          {member.qualifications.map((q) => (
+                            <li class="team-row__tag">{q}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    <a
+                      href={BOOKING_LINK}
+                      class="team-row__book"
+                      data-booking
+                    >
+                      Book with {getFirstName(member.name)}
+                    </a>
+                  </div>
+                </div>
               )}
             </div>
           </article>
@@ -123,102 +161,6 @@ function padIndex(i: number): string {
       <p class="team-empty">Team information coming soon.</p>
     </div>
   )}
-
-  {/* Slide-in Drawer */}
-  <div class="drawer-overlay" id="team-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
-    <div class="drawer-backdrop" data-drawer-close></div>
-    <div class="drawer-panel">
-      <div class="drawer-header">
-        <h2 class="drawer-title" id="drawer-title">Profile</h2>
-        <button type="button" class="drawer-close" data-drawer-close aria-label="Close profile">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      <div class="drawer-body">
-        {members.map((member) => (
-          <div class="drawer-content" data-drawer-content={member._id} hidden>
-            {/* Drawer hero photo */}
-            <div class="drawer-hero">
-              {member.photo ? (
-                <SanityImage
-                  source={member.photo.image}
-                  alt={member.photo.alt || member.name}
-                  width={640}
-                  height={400}
-                  class="drawer-hero__img"
-                  loading="lazy"
-                />
-              ) : (
-                <img
-                  src={teamFallbackPhotos[member.name] || '/placeholders/team.svg'}
-                  alt={member.name}
-                  width={640}
-                  height={400}
-                  class="drawer-hero__img"
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
-            </div>
-
-            <div class="drawer-inner">
-              <h3 class="drawer-name">{member.name}</h3>
-              {member.role && <p class="drawer-role">{member.role}</p>}
-
-              {member.quote && (
-                <blockquote class="drawer-quote">
-                  <span class="drawer-quote__mark" aria-hidden="true">&ldquo;</span>
-                  {member.quote}
-                </blockquote>
-              )}
-
-              {member.bio && member.bio.length > 0 && (
-                <div class="drawer-section">
-                  <p class="drawer-section__label">Biography</p>
-                  <div class="drawer-bio">
-                    <PortableText value={member.bio} />
-                  </div>
-                </div>
-              )}
-
-              {member.specialisms && member.specialisms.length > 0 && (
-                <div class="drawer-section">
-                  <p class="drawer-section__label">Specialisms</p>
-                  <ul class="drawer-tags" role="list">
-                    {member.specialisms.map((s) => (
-                      <li class="drawer-tag">{s}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {member.qualifications && member.qualifications.length > 0 && (
-                <div class="drawer-section">
-                  <p class="drawer-section__label">Qualifications</p>
-                  <ul class="drawer-tags" role="list">
-                    {member.qualifications.map((q) => (
-                      <li class="drawer-tag">{q}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <a
-                href={BOOKING_LINK}
-                class="drawer-book"
-                data-booking
-              >
-                Book with {getFirstName(member.name)}
-              </a>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
 </section>
 
 <style>
@@ -242,7 +184,7 @@ function padIndex(i: number): string {
     max-width: var(--max-width);
     margin-inline: auto;
     padding-inline: var(--space-6);
-    align-items: center;
+    align-items: start;
   }
 
   .team-empty {
@@ -365,8 +307,11 @@ function padIndex(i: number): string {
     border-radius: var(--radius-full);
   }
 
+  /* CTA toggle button */
   .team-row__cta {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     font-family: var(--font-body);
     font-size: 0.6875rem;
     font-weight: var(--font-weight-body-medium);
@@ -390,167 +335,43 @@ function padIndex(i: number): string {
     outline-offset: 3px;
   }
 
-  /* Desktop: 2-column grid */
-  @media (min-width: 768px) {
-    .team-row {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-12);
-    }
+  .team-row__cta-arrow {
+    display: inline-block;
+    transition: transform var(--transition-fast);
+  }
 
-    /* Reversed rows swap column order */
-    .team-row--reversed .team-row__photo {
-      order: 1;
-    }
-
-    .team-row--reversed .team-row__content {
-      order: 0;
-    }
+  .team-row__cta[aria-expanded="true"] .team-row__cta-arrow {
+    transform: rotate(180deg);
   }
 
   /* -----------------------------------------------------------
-     Slide-in Drawer
+     Inline Accordion
   ----------------------------------------------------------- */
-  .drawer-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
+  .team-row__expand {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 400ms ease;
+    margin-top: var(--space-6);
   }
 
-  .drawer-overlay[hidden] {
-    display: none;
+  .team-row__expand[hidden] {
+    display: grid;
+    grid-template-rows: 0fr;
   }
 
-  .drawer-backdrop {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(30, 30, 30, 0.5);
-    animation: drawerFadeIn 250ms ease;
+  .team-row__expand.is-open {
+    grid-template-rows: 1fr;
   }
 
-  .drawer-panel {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-height: 95vh;
-    background-color: var(--color-white);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.15);
-    animation: drawerSlideUp 300ms ease;
-  }
-
-  .drawer-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-4) var(--space-6);
-    border-bottom: 1px solid var(--color-accent);
-    flex-shrink: 0;
-  }
-
-  .drawer-title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-heading-regular);
-    color: var(--color-primary);
-  }
-
-  .drawer-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border: none;
-    background: none;
-    color: var(--color-neutral-500);
-    border-radius: var(--radius-full);
-    cursor: pointer;
-    transition: background-color var(--transition-fast), color var(--transition-fast);
-  }
-
-  .drawer-close:hover {
-    background-color: var(--color-accent);
-    color: var(--color-primary);
-  }
-
-  .drawer-close:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
-
-  .drawer-body {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Drawer content blocks */
-  .drawer-hero {
-    max-height: 240px;
+  .team-row__expand-inner {
     overflow: hidden;
   }
 
-  .drawer-hero :global(img),
-  .drawer-hero__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .drawer-inner {
-    padding: var(--space-6);
-  }
-
-  .drawer-name {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-heading-light);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-primary);
-    margin-bottom: var(--space-1);
-  }
-
-  .drawer-role {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-base);
-    font-style: italic;
-    font-weight: var(--font-weight-heading-regular);
-    color: var(--color-neutral-500);
+  .team-row__section {
     margin-bottom: var(--space-6);
   }
 
-  .drawer-quote {
-    position: relative;
-    padding-left: var(--space-6);
-    border-left: 2px solid var(--color-secondary);
-    font-family: var(--font-heading);
-    font-size: var(--font-size-base);
-    font-style: italic;
-    font-weight: var(--font-weight-heading-regular);
-    color: var(--color-neutral-600);
-    line-height: 1.6;
-    margin-bottom: var(--space-6);
-  }
-
-  .drawer-quote__mark {
-    position: absolute;
-    top: -0.2em;
-    left: var(--space-2);
-    font-size: var(--font-size-2xl);
-    color: var(--color-secondary);
-    line-height: 1;
-  }
-
-  .drawer-section {
-    margin-bottom: var(--space-6);
-  }
-
-  .drawer-section__label {
+  .team-row__section-label {
     font-family: var(--font-heading);
     font-size: 0.6875rem;
     font-weight: var(--font-weight-heading-regular);
@@ -560,39 +381,24 @@ function padIndex(i: number): string {
     margin-bottom: var(--space-3);
   }
 
-  .drawer-bio {
+  .team-row__full-bio {
     font-size: var(--font-size-base);
     color: var(--color-neutral-600);
     line-height: 1.7;
   }
 
-  .drawer-bio :global(p) {
+  .team-row__full-bio :global(p) {
     margin-bottom: var(--space-4);
   }
 
-  .drawer-bio :global(p:last-child) {
+  .team-row__full-bio :global(p:last-child) {
     margin-bottom: 0;
   }
 
-  .drawer-tags {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .drawer-tag {
-    font-size: var(--font-size-sm);
-    color: var(--color-neutral-600);
-    padding: var(--space-1) var(--space-3);
-    background-color: var(--color-accent);
-    border-radius: var(--radius-full);
-  }
-
-  .drawer-book {
+  .team-row__book {
     display: inline-block;
     margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
     padding: var(--space-3) var(--space-8);
     font-family: var(--font-body);
     font-size: 0.6875rem;
@@ -606,11 +412,11 @@ function padIndex(i: number): string {
     transition: background-color var(--transition-fast);
   }
 
-  .drawer-book:hover {
+  .team-row__book:hover {
     background-color: var(--color-secondary-dark);
   }
 
-  .drawer-book:focus-visible {
+  .team-row__book:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 3px;
   }
@@ -628,142 +434,70 @@ function padIndex(i: number): string {
     border: 0;
   }
 
-  /* Animations */
-  @keyframes drawerFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes drawerSlideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  @keyframes drawerSlideIn {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
-  }
-
-  /* Desktop — side drawer from right */
+  /* Desktop: 2-column grid */
   @media (min-width: 768px) {
-    .drawer-overlay {
-      align-items: stretch;
-      justify-content: flex-end;
+    .team-row {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
     }
 
-    .drawer-panel {
-      max-width: 640px;
-      max-height: none;
-      height: 100%;
-      border-radius: 0;
-      animation: drawerSlideIn 300ms ease;
+    /* Reversed rows swap column order */
+    .team-row--reversed .team-row__photo {
+      order: 1;
     }
 
-    .drawer-hero {
-      max-height: 320px;
+    .team-row--reversed .team-row__content {
+      order: 0;
     }
   }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .drawer-backdrop,
-    .drawer-panel,
+    .team-row__expand,
+    .team-row__cta-arrow,
     .team-row__photo-frame :global(img),
     .team-row__photo-frame .team-row__img {
-      animation: none;
       transition: none;
     }
   }
 </style>
 
 <script>
-  const overlay = document.getElementById('team-drawer');
-  if (!overlay) throw new Error('team-drawer element not found');
-  const drawerTitle = document.getElementById('drawer-title');
-  let isOpen = false;
-  let previousFocus: HTMLElement | null = null;
-
-  function openDrawer(memberId: string) {
-    if (isOpen) return;
-    isOpen = true;
-    previousFocus = document.activeElement as HTMLElement;
-
-    // Hide all content blocks, show the target
-    overlay.querySelectorAll('[data-drawer-content]').forEach((el) => {
-      (el as HTMLElement).hidden = true;
-    });
-    const target = overlay.querySelector(`[data-drawer-content="${CSS.escape(memberId)}"]`) as HTMLElement;
-    if (target) {
-      target.hidden = false;
-      // Update drawer title for accessibility
-      const name = target.querySelector('.drawer-name');
-      if (name && drawerTitle) {
-        drawerTitle.textContent = name.textContent || 'Profile';
-      }
-    }
-
-    overlay.hidden = false;
-    document.body.style.overflow = 'hidden';
-
-    // Scroll drawer body to top
-    const body = overlay.querySelector('.drawer-body') as HTMLElement;
-    if (body) body.scrollTop = 0;
-
-    // Focus the close button
-    requestAnimationFrame(() => {
-      const closeBtn = overlay.querySelector('.drawer-close') as HTMLElement;
-      closeBtn?.focus();
-    });
-  }
-
-  function closeDrawer() {
-    if (!isOpen) return;
-    isOpen = false;
-    overlay.hidden = true;
-    document.body.style.overflow = '';
-
-    if (previousFocus && previousFocus.focus) {
-      previousFocus.focus();
-      previousFocus = null;
-    }
-  }
-
-  // Focus trap — scoped to visible drawer content only
-  function trapFocus(e: KeyboardEvent) {
-    if (e.key !== 'Tab' || !isOpen) return;
-    const focusable = overlay.querySelectorAll(
-      '.drawer-close, .drawer-content:not([hidden]) button, .drawer-content:not([hidden]) [href], .drawer-content:not([hidden]) [tabindex]:not([tabindex="-1"])'
-    );
-    if (!focusable.length) return;
-    const first = focusable[0] as HTMLElement;
-    const last = focusable[focusable.length - 1] as HTMLElement;
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  }
-
-  // Close buttons + backdrop
-  document.querySelectorAll('[data-drawer-close]').forEach((el) => {
-    el.addEventListener('click', closeDrawer);
-  });
-
-  // Escape key + focus trap
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isOpen) closeDrawer();
-    trapFocus(e);
-  });
-
-  // Trigger buttons
   document.addEventListener('click', (e) => {
-    const trigger = (e.target as HTMLElement).closest('[data-drawer-trigger]') as HTMLElement;
-    if (trigger) {
-      e.preventDefault();
-      const memberId = trigger.getAttribute('data-drawer-trigger');
-      if (memberId) openDrawer(memberId);
+    const trigger = (e.target as HTMLElement).closest('[data-accordion-trigger]') as HTMLElement;
+    if (!trigger) return;
+
+    const panelId = trigger.getAttribute('data-accordion-trigger');
+    if (!panelId) return;
+
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+
+    const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+    const textEl = trigger.querySelector('.team-row__cta-text');
+
+    if (isOpen) {
+      // Close
+      panel.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      if (textEl) textEl.textContent = 'Read full profile';
+
+      // Hide after transition completes
+      panel.addEventListener('transitionend', () => {
+        if (trigger.getAttribute('aria-expanded') === 'false') {
+          panel.hidden = true;
+        }
+      }, { once: true });
+    } else {
+      // Open — remove hidden first so transition can run
+      panel.hidden = false;
+
+      // Force a reflow before adding the class so the transition fires
+      panel.offsetHeight;
+
+      panel.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      if (textEl) textEl.textContent = 'Close profile';
     }
   });
 </script>
