@@ -492,6 +492,7 @@ function padIndex(i: number): string {
   /* Drawer content blocks */
   .drawer-hero {
     aspect-ratio: 16 / 10;
+    max-height: 35vh;
     overflow: hidden;
   }
 
@@ -658,6 +659,10 @@ function padIndex(i: number): string {
       height: 100%;
       border-radius: 0;
       animation: drawerSlideIn 300ms ease;
+    }
+
+    .drawer-hero {
+      max-height: none;
     }
   }
 
