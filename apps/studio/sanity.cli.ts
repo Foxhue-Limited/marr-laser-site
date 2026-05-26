@@ -6,4 +6,7 @@ export default defineCliConfig({
     dataset: process.env.SANITY_STUDIO_DATASET || 'production',
   },
   studioHost: 'marr-laser',
+  deployment: {
+    appId: 'lb1oe6zokqktwo3z6j0q4s1n',
+  },
 });
