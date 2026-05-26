@@ -440,7 +440,6 @@ function padIndex(i: number): string {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.15);
     animation: drawerSlideUp 300ms ease;
-    overflow: hidden;
   }
 
   .drawer-header {
@@ -491,8 +490,7 @@ function padIndex(i: number): string {
 
   /* Drawer content blocks */
   .drawer-hero {
-    aspect-ratio: 16 / 10;
-    max-height: 35vh;
+    max-height: 240px;
     overflow: hidden;
   }
 
@@ -662,7 +660,7 @@ function padIndex(i: number): string {
     }
 
     .drawer-hero {
-      max-height: none;
+      max-height: 320px;
     }
   }
 
