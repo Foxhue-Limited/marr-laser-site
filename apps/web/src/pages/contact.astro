@@ -6,6 +6,13 @@ import { siteSettingsQuery } from '@lib/queries';
 import type { SiteSettings } from '@foxhue/shared';
 
 const settings: SiteSettings = await sanityClient.fetch(siteSettingsQuery);
+
+function formatTime(time: string): string {
+  const [h, m] = time.split(':').map(Number);
+  const period = h >= 12 ? 'pm' : 'am';
+  const hour = h % 12 || 12;
+  return m === 0 ? `${hour}${period}` : `${hour}:${m.toString().padStart(2, '0')}${period}`;
+}
 ---
 
 <BaseLayout title="Contact" description="Get in touch with us. We would love to hear from you.">
@@ -50,7 +57,7 @@ const settings: SiteSettings = await sanityClient.fetch(siteSettingsQuery);
                     <dd>
                       {hours.closed
                         ? 'Closed'
-                        : `${hours.open} - ${hours.close}`}
+                        : `${formatTime(hours.open)} – ${formatTime(hours.close)}`}
                     </dd>
                   </div>
                 ))}

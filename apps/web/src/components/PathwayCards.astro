@@ -1,4 +1,6 @@
 ---
+import { BOOKING_LINK } from '@lib/constants';
+
 interface PathwayItem {
   title: string;
   description: string;
@@ -28,8 +30,8 @@ const defaultItems: PathwayItem[] = [
   },
   {
     title: 'Book a Consultation',
-    description: 'Free initial consultation to discuss your goals and create a personalised plan.',
-    href: '/contact',
+    description: 'Book your consultation with one of our practitioners — your fee is fully redeemable against treatments or products on the day.',
+    href: BOOKING_LINK,
     icon: '✦',
   },
 ];

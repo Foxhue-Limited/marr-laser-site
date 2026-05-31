@@ -121,11 +121,11 @@ function padIndex(i: number): string {
               {expandable && (
                 <div class="team-row__expand" id={accordionId} hidden>
                   <div class="team-row__expand-inner">
-                    {member.bio && member.bio.length > 0 && (
+                    {member.bio && member.bio.length > 1 && (
                       <div class="team-row__section">
                         <p class="team-row__section-label">Biography</p>
                         <div class="team-row__full-bio">
-                          <PortableText value={member.bio} />
+                          <PortableText value={member.bio.slice(1)} />
                         </div>
                       </div>
                     )}

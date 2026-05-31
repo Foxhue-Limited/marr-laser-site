@@ -32,7 +32,17 @@ const { sections } = Astro.props;
         </div>
         <div class="treatment-row__content">
           <h2>{section.heading}</h2>
-          <PortableText value={section.blocks} />
+          {section.blocks.length > 3 ? (
+            <>
+              <PortableText value={[section.blocks[0]]} />
+              <div class="treatment-expand__body" hidden>
+                <PortableText value={section.blocks.slice(1)} />
+              </div>
+              <button class="treatment-expand__btn" type="button">Learn More</button>
+            </>
+          ) : (
+            <PortableText value={section.blocks} />
+          )}
         </div>
       </div>
     );
@@ -75,6 +85,29 @@ const { sections } = Astro.props;
     order: 1;
   }
 
+  .treatment-expand__btn {
+    display: inline-flex;
+    align-items: center;
+    margin-top: var(--space-4);
+    padding: var(--space-2) var(--space-6);
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-body-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    background: transparent;
+    border: 1px solid var(--color-secondary);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: background-color var(--transition-base), color var(--transition-base);
+  }
+
+  .treatment-expand__btn:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+  }
+
   @media (min-width: 768px) {
     .treatment-row {
       grid-template-columns: 1fr 1fr;
@@ -90,3 +123,14 @@ const { sections } = Astro.props;
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.treatment-expand__btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const body = btn.previousElementSibling as HTMLElement;
+      const expanded = !body.hidden;
+      body.hidden = expanded;
+      btn.textContent = expanded ? 'Learn More' : 'Read Less';
+    });
+  });
+</script>
