@@ -30,7 +30,7 @@ const grouped = services.reduce<Record<string, Service[]>>((acc, service) => {
 
   <section class="pricing-content">
     <div class="container">
-      {Object.entries(grouped).map(([category, categoryServices]) => (
+      {Object.entries(grouped).filter(([category]) => category !== 'All Treatments').map(([category, categoryServices]) => (
         <div class="pricing-category">
           <h2 class="category-title">{category}</h2>
           <div class="pricing-table">
