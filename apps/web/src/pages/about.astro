@@ -61,6 +61,7 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
     min-height: 100svh;
     max-width: 1440px;
     margin-inline: auto;
+    overflow: hidden;
   }
 
   .hero-content {
@@ -136,6 +137,9 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
   @media (min-width: 768px) {
     .hero-inner {
       flex-direction: row;
+      height: 100vh;
+      height: 100svh;
+      min-height: unset;
     }
 
     .hero-content {
@@ -144,6 +148,7 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
 
     .hero-media {
       flex: 1;
+      overflow: hidden;
     }
 
     .hero-content {
