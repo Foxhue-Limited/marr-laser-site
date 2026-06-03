@@ -166,20 +166,23 @@ if (service.treatmentSections && service.treatmentSections.length > 0) {
       </div>
     </div>
 
-    <div class="container" id="treatments">
-
+    <div id="treatments" class="treatments-wrapper">
       {hasSections && treatmentSections.length > 0 ? (
         <>
           {introBlocks.length > 0 && (
-            <div class="service-body prose">
-              <PortableText value={introBlocks} />
+            <div class="container">
+              <div class="service-body prose">
+                <PortableText value={introBlocks} />
+              </div>
             </div>
           )}
           <TreatmentSection sections={treatmentSections} />
         </>
       ) : service.body ? (
-        <div class="service-body prose">
-          <PortableText value={service.body} />
+        <div class="container">
+          <div class="service-body prose">
+            <PortableText value={service.body} />
+          </div>
         </div>
       ) : null}
     </div>
@@ -191,6 +194,10 @@ if (service.treatmentSections && service.treatmentSections.length > 0) {
 <style>
   .service-detail {
     padding-bottom: var(--space-20);
+  }
+
+  .treatments-wrapper {
+    padding-top: var(--space-16);
   }
 
   /* ── Hero ── */
