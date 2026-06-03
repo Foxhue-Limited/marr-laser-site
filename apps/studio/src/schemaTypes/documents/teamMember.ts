@@ -32,6 +32,7 @@ export default defineType({
       title: 'Quote',
       type: 'string',
       description: 'A personal quote displayed as a blockquote on the team page.',
+      validation: (rule) => rule.max(270).warning('Keep the quote under 270 characters for best results on the team page.'),
     }),
     defineField({
       name: 'specialisms',
