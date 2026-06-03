@@ -9,21 +9,35 @@ const faqs: FAQ[] = await sanityClient.fetch(faqsQuery);
 ---
 
 <BaseLayout title="FAQ" description="Frequently asked questions and answers.">
-  <section class="faq-page" aria-labelledby="faq-heading">
+  <section class="faq-hero">
     <div class="container">
-      <h1 id="faq-heading">Frequently Asked Questions</h1>
-      <FAQAccordion faqs={faqs} />
+      <p class="eyebrow">Support</p>
+      <h1 class="faq-title">Frequently Asked Questions</h1>
+    </div>
+  </section>
+
+  <section class="faq-page">
+    <div class="container">
+      <FAQAccordion faqs={faqs} heading="" />
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .faq-page {
-    padding-block: var(--space-20);
+  .faq-hero {
+    background-color: var(--color-accent);
+    padding-block: var(--space-16);
+    text-align: center;
   }
 
-  .faq-page h1 {
-    text-align: center;
-    margin-bottom: var(--space-12);
+  .faq-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-heading-light);
+    color: var(--color-primary);
+  }
+
+  .faq-page {
+    padding-block: var(--space-16);
   }
 </style>
