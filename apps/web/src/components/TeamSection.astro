@@ -26,9 +26,7 @@ function getFirstName(name: string): string {
   return name.split(' ')[0];
 }
 
-function padIndex(i: number): string {
-  return String(i + 1).padStart(2, '0');
-}
+
 ---
 
 <section class="team-section reveal" aria-labelledby="team-heading">
@@ -67,7 +65,7 @@ function padIndex(i: number): string {
                     fetchpriority={i === 0 ? 'high' : undefined}
                   />
                 )}
-                <span class="team-row__number" aria-hidden="true">{padIndex(i)}</span>
+
               </div>
             </div>
 

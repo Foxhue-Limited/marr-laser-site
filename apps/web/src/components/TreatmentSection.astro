@@ -13,11 +13,22 @@ interface Props {
 }
 
 const { sections } = Astro.props;
+
+function extractPlainText(blocks: SanityBlock[]): string {
+  return blocks
+    .filter((b) => b._type === 'block')
+    .flatMap((b) => (b.children ?? []))
+    .map((c) => c.text ?? '')
+    .join('');
+}
+
+const EXPAND_THRESHOLD = 400;
 ---
 
 <div class="treatment-sections">
   {sections.map((section, i) => {
     const isReversed = i % 2 === 1;
+    const needsExpander = extractPlainText(section.blocks).length > EXPAND_THRESHOLD;
     return (
       <div class={`treatment-row reveal${isReversed ? ' treatment-row--reversed' : ''}`}>
         <div class="treatment-row__image">
@@ -32,7 +43,7 @@ const { sections } = Astro.props;
         </div>
         <div class="treatment-row__content">
           <h2>{section.heading}</h2>
-          {section.blocks.length > 3 ? (
+          {needsExpander ? (
             <>
               <PortableText value={[section.blocks[0]]} />
               <div class="treatment-expand__body" hidden>
