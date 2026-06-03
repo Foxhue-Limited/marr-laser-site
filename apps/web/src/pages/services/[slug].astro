@@ -141,26 +141,32 @@ if (service.treatmentSections && service.treatmentSections.length > 0) {
             fetchpriority="high"
           />
         ) : (
-          <img src={fallbackHero} alt={service.title} width={1200} height={600} loading="eager" decoding="async" />
+          <img src={fallbackHero} alt={service.title} width={1440} loading="eager" decoding="sync" />
         )}
+        <div class="service-hero__overlay">
+          <div class="service-hero__content">
+            <h1 class="service-hero__title">{service.title}</h1>
+            {(service.price || service.duration) && (
+              <div class="service-meta" role="list" aria-label="Service details">
+                {service.price && (
+                  <span class="badge" role="listitem">{service.price}</span>
+                )}
+                {service.duration && (
+                  <span class="badge badge--light" role="listitem">{service.duration}</span>
+                )}
+              </div>
+            )}
+          </div>
+          <a class="service-hero__scroll" href="#treatments" aria-label="Scroll to treatments">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
 
-    <div class="container">
-      <div class="service-header">
-        <h1>{service.title}</h1>
-
-        {(service.price || service.duration) && (
-          <div class="service-meta" role="list" aria-label="Service details">
-            {service.price && (
-              <span class="badge" role="listitem">{service.price}</span>
-            )}
-            {service.duration && (
-              <span class="badge" role="listitem">{service.duration}</span>
-            )}
-          </div>
-        )}
-      </div>
+    <div class="container" id="treatments">
 
       {hasSections && treatmentSections.length > 0 ? (
         <>
@@ -187,19 +193,18 @@ if (service.treatmentSections && service.treatmentSections.length > 0) {
     padding-bottom: var(--space-20);
   }
 
+  /* ── Hero ── */
   .service-hero-wrapper {
-    background-color: var(--color-accent);
-    padding-inline: var(--space-6);
-    padding-block: var(--space-6);
+    position: relative;
   }
 
   .service-hero {
+    position: relative;
     width: 100%;
-    max-width: 1200px;
-    margin-inline: auto;
-    height: 320px;
+    height: 70vh;
+    min-height: 420px;
+    max-height: 700px;
     overflow: hidden;
-    border-radius: var(--radius-lg);
   }
 
   .service-hero :global(img) {
@@ -210,13 +215,49 @@ if (service.treatmentSections && service.treatmentSections.length > 0) {
     display: block;
   }
 
-  .service-header {
-    max-width: var(--max-width-narrow);
-    padding-block: var(--space-12);
+  .service-hero__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-10) var(--space-8) var(--space-8);
+    background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
   }
 
-  .service-header h1 {
+  .service-hero__content {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .service-hero__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-heading-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-white);
     margin-bottom: var(--space-4);
+  }
+
+  .service-hero__scroll {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: var(--space-6);
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-white);
+    opacity: 0.8;
+    animation: bounce 2s infinite;
+    text-decoration: none;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
   }
 
   .service-meta {
@@ -228,12 +269,17 @@ if (service.treatmentSections && service.treatmentSections.length > 0) {
   .badge {
     display: inline-block;
     padding: var(--space-1) var(--space-4);
-    background-color: var(--color-accent);
-    color: var(--color-primary);
+    background-color: rgba(255,255,255,0.15);
+    color: var(--color-white);
     font-size: var(--font-size-sm);
     font-weight: 500;
     border-radius: var(--radius-full);
-    border: 1px solid var(--color-secondary);
+    border: 1px solid rgba(255,255,255,0.4);
+    backdrop-filter: blur(4px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-hero__scroll { animation: none; }
   }
 
   .service-body {
