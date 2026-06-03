@@ -116,6 +116,14 @@ button { cursor: pointer; }
   .container { padding-inline: var(--space-8); }
 }
 
+.page-hero {
+  background-color: var(--color-accent);
+  padding-block: var(--space-16);
+  text-align: center;
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
 .sr-only {
   position: absolute;
   width: 1px; height: 1px;

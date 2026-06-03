@@ -9,7 +9,7 @@ const faqs: FAQ[] = await sanityClient.fetch(faqsQuery);
 ---
 
 <BaseLayout title="FAQ" description="Frequently asked questions and answers.">
-  <section class="faq-hero">
+  <section class="page-hero faq-hero">
     <div class="container">
       <p class="eyebrow">Support</p>
       <h1 class="faq-title">Frequently Asked Questions</h1>
@@ -24,11 +24,6 @@ const faqs: FAQ[] = await sanityClient.fetch(faqsQuery);
 </BaseLayout>
 
 <style>
-  .faq-hero {
-    background-color: var(--color-accent);
-    padding-block: var(--space-16);
-    text-align: center;
-  }
 
   .faq-title {
     font-family: var(--font-heading);
