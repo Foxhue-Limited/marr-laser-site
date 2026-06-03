@@ -1,19 +1,25 @@
 ---
-/**
- * Scroll-snap carousel for showcasing clinic images.
- * User swipes or uses prev/next buttons to navigate.
- */
+import type { Figure } from '@foxhue/shared';
+import { sanityImageUrl } from '@lib/image';
+
 interface Props {
   class?: string;
+  images?: Figure[];
 }
 
-const images = [
+const { images: sanityImages } = Astro.props;
+
+const FALLBACK = [
   { src: '/images/hero.jpg', alt: 'Marr Laser & Skin Clinic' },
   { src: '/images/services/laser-hero.jpg', alt: 'Laser treatments at the clinic' },
   { src: '/images/services/skin-hero.jpg', alt: 'Skin treatments at the clinic' },
   { src: '/images/tech/cynosure.jpg', alt: 'Medical-grade Cynosure technology' },
   { src: '/images/team/team-hero.jpg', alt: 'The MARR clinic team' },
 ];
+
+const images = sanityImages && sanityImages.length > 0
+  ? sanityImages.map((f) => ({ src: sanityImageUrl(f.image, 1600, 900), alt: f.alt }))
+  : FALLBACK;
 ---
 
 <div class:list={['carousel', Astro.props.class]} aria-label="Clinic photos">

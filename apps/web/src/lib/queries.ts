@@ -23,6 +23,10 @@ export const siteSettingsQuery = groq`
       platform,
       url
     },
+    carouselImages[]{
+      image,
+      alt
+    },
     defaultSeo{
       title,
       description,

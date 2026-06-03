@@ -61,6 +61,7 @@ export interface SiteSettings {
   address?: string;
   openingHours?: OpeningHours[];
   socialLinks?: SocialLink[];
+  carouselImages?: Figure[];
   defaultSeo?: SEO;
 }
 
