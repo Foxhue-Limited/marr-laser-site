@@ -6,6 +6,7 @@ export type {
   SiteSettings,
   Page,
   Service,
+  TreatmentSection,
   TeamMember,
   Testimonial,
   BlogPost,

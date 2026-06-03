@@ -8,6 +8,7 @@ import openingHours from './objects/openingHours'
 import hero from './objects/hero'
 import cta from './objects/cta'
 import galleryImage from './objects/galleryImage'
+import treatmentSection from './objects/treatmentSection'
 
 // Document types
 import siteSettings from './documents/siteSettings'
@@ -29,6 +30,7 @@ export const schemaTypes = [
   hero,
   cta,
   galleryImage,
+  treatmentSection,
 
   // Documents
   siteSettings,

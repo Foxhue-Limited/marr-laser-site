@@ -35,6 +35,15 @@ export const siteSettingsQuery = groq`
 // Services
 // ---------------------------------------------------------------------------
 
+const treatmentSectionsFragment = groq`
+  treatmentSections[]{
+    _key,
+    heading,
+    body,
+    image
+  }
+`;
+
 export const servicesQuery = groq`
   *[_type == "service"] | order(featured desc, title asc){
     _id,
@@ -42,6 +51,7 @@ export const servicesQuery = groq`
     slug,
     excerpt,
     image,
+    ${treatmentSectionsFragment},
     body,
     price,
     duration,
@@ -70,6 +80,7 @@ export const serviceBySlugQuery = groq`
     slug,
     excerpt,
     image,
+    ${treatmentSectionsFragment},
     body,
     price,
     duration,

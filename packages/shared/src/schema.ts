@@ -73,12 +73,20 @@ export interface Page {
   seo?: SEO;
 }
 
+export interface TreatmentSection {
+  _key: string;
+  heading: string;
+  body?: SanityBlock[];
+  image?: Figure;
+}
+
 export interface Service {
   _id: string;
   title: string;
   slug: SanitySlug;
   excerpt?: string;
   image?: Figure;
+  treatmentSections?: TreatmentSection[];
   body?: SanityBlock[];
   price?: string;
   duration?: string;

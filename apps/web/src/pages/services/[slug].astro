@@ -6,7 +6,8 @@ import TreatmentSection from '@components/TreatmentSection.astro';
 import CTABanner from '@components/CTABanner.astro';
 import { sanityClient } from '@lib/sanity';
 import { servicesQuery, serviceBySlugQuery } from '@lib/queries';
-import type { Service, SanityBlock } from '@foxhue/shared';
+import { sanityImageUrl } from '@lib/image';
+import type { Service, SanityBlock, TreatmentSection as TreatmentSectionType } from '@foxhue/shared';
 
 export async function getStaticPaths() {
   const services: Service[] = await sanityClient.fetch(servicesQuery);
@@ -98,13 +99,24 @@ function splitByH2(blocks: SanityBlock[]): { intro: SanityBlock[]; sections: { h
   return { intro, sections };
 }
 
+// Prefer structured treatmentSections from Sanity; fall back to legacy H2-split body
 const images = sectionImageMap[slug as string];
-const hasSections = !!(images && service.body);
-
 let introBlocks: SanityBlock[] = [];
 let treatmentSections: { heading: string; blocks: SanityBlock[]; image: { src: string; alt: string } }[] = [];
-if (hasSections) {
-  const { intro, sections: groups } = splitByH2(service.body!);
+let hasSections = false;
+
+if (service.treatmentSections && service.treatmentSections.length > 0) {
+  hasSections = true;
+  treatmentSections = service.treatmentSections.map((s: TreatmentSectionType) => ({
+    heading: s.heading,
+    blocks: s.body ?? [],
+    image: s.image
+      ? { src: sanityImageUrl(s.image.image, 600, 400), alt: s.image.alt }
+      : { src: '/placeholders/service.svg', alt: s.heading },
+  }));
+} else if (images && service.body) {
+  hasSections = true;
+  const { intro, sections: groups } = splitByH2(service.body);
   introBlocks = intro;
   treatmentSections = groups.map((group, i) => ({
     ...group,
