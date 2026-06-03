@@ -19,12 +19,17 @@ const treatmentCategories = [
   { label: 'CACI Treatments', href: '/services/caci-treatments' },
 ];
 
+const clinicInfoItems = [
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Treatment Gallery', href: '/gallery' },
+];
+
 const navItems = [
   { label: 'Treatments', href: '/services', children: treatmentCategories },
   { label: 'Pricing', href: '/pricing' },
   { label: 'About', href: '/about' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Clinic Info', href: '/faq', children: clinicInfoItems },
   { label: 'Contact', href: '/contact' },
 ];
 

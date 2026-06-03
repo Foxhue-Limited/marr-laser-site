@@ -11,6 +11,7 @@ export type {
   Testimonial,
   BlogPost,
   FAQ,
+  GalleryPost,
   SEO,
   Hero,
   CTA,

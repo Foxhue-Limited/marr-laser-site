@@ -192,3 +192,20 @@ export const faqsQuery = groq`
     order
   }
 `;
+
+// ---------------------------------------------------------------------------
+// Gallery
+// ---------------------------------------------------------------------------
+
+export const galleryPostsQuery = groq`
+  *[_type == "galleryPost" && consentGiven == true] | order(coalesce(order, 9999) asc, publishedAt desc){
+    _id,
+    postType,
+    image,
+    beforeImage,
+    afterImage,
+    caption,
+    treatment,
+    publishedAt
+  }
+`;

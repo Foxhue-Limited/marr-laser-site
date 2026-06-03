@@ -18,6 +18,7 @@ import teamMember from './documents/teamMember'
 import testimonial from './documents/testimonial'
 import blogPost from './documents/blogPost'
 import faq from './documents/faq'
+import galleryPost from './documents/galleryPost'
 
 export const schemaTypes = [
   // Objects (must be registered before documents that reference them)
@@ -40,4 +41,5 @@ export const schemaTypes = [
   testimonial,
   blogPost,
   faq,
+  galleryPost,
 ]

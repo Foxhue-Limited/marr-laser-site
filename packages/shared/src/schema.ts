@@ -126,6 +126,19 @@ export interface BlogPost {
   seo?: SEO;
 }
 
+export interface GalleryPost {
+  _id: string;
+  postType: 'single' | 'beforeAfter';
+  image?: Figure;
+  beforeImage?: Figure;
+  afterImage?: Figure;
+  caption: string;
+  treatment: string;
+  consentGiven: boolean;
+  publishedAt: string;
+  order?: number;
+}
+
 export interface FAQ {
   _id: string;
   question: string;
