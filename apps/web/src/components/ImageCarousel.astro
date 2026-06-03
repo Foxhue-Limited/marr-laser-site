@@ -18,7 +18,7 @@ const FALLBACK = [
 ];
 
 const images = sanityImages && sanityImages.length > 0
-  ? sanityImages.map((f) => ({ src: sanityImageUrl(f.image, 1600, 900), alt: f.alt }))
+  ? sanityImages.map((f) => ({ src: sanityImageUrl(f.image, 1600), alt: f.alt }))
   : FALLBACK;
 ---
 
@@ -137,7 +137,9 @@ const images = sanityImages && sanityImages.length > 0
     flex: 0 0 100%;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center center;
+    background-color: var(--color-accent);
     scroll-snap-align: start;
   }
 
