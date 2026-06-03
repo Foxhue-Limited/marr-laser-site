@@ -61,7 +61,6 @@ export interface SiteSettings {
   address?: string;
   openingHours?: OpeningHours[];
   socialLinks?: SocialLink[];
-  carouselImages?: Figure[];
   defaultSeo?: SEO;
 }
 
@@ -70,6 +69,7 @@ export interface Page {
   title: string;
   slug: SanitySlug;
   hero?: Hero;
+  carouselImages?: Figure[];
   body?: SanityBlock[];
   seo?: SEO;
 }

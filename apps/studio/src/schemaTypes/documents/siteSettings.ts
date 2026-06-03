@@ -55,13 +55,6 @@ export default defineType({
       of: [{ type: 'socialLink' }],
     }),
     defineField({
-      name: 'carouselImages',
-      title: 'About Page Carousel Images',
-      type: 'array',
-      of: [{ type: 'figure' }],
-      description: 'Images displayed in the carousel on the About page. Recommended: 5 images.',
-    }),
-    defineField({
       name: 'defaultSeo',
       title: 'Default SEO',
       type: 'seo',

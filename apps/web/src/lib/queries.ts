@@ -23,10 +23,6 @@ export const siteSettingsQuery = groq`
       platform,
       url
     },
-    carouselImages[]{
-      image,
-      alt
-    },
     defaultSeo{
       title,
       description,
@@ -114,6 +110,10 @@ export const pageBySlugQuery = groq`
     title,
     slug,
     hero,
+    carouselImages[]{
+      image,
+      alt
+    },
     body,
     seo
   }

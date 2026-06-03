@@ -4,12 +4,11 @@ import ImageCarousel from '@components/ImageCarousel.astro';
 import PortableText from '@components/PortableText.astro';
 import TeamTeaser from '@components/TeamTeaser.astro';
 import { sanityClient } from '@lib/sanity';
-import { pageBySlugQuery, teamMembersQuery, siteSettingsQuery } from '@lib/queries';
-import type { Page, TeamMember, SiteSettings } from '@foxhue/shared';
+import { pageBySlugQuery, teamMembersQuery } from '@lib/queries';
+import type { Page, TeamMember } from '@foxhue/shared';
 
 const page: Page = await sanityClient.fetch(pageBySlugQuery, { slug: 'about' });
 const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
-const siteSettings: SiteSettings = await sanityClient.fetch(siteSettingsQuery);
 ---
 
 <BaseLayout
@@ -30,7 +29,7 @@ const siteSettings: SiteSettings = await sanityClient.fetch(siteSettingsQuery);
         </div>
       </div>
       <div class="hero-media">
-        <ImageCarousel images={siteSettings?.carouselImages} />
+        <ImageCarousel images={page?.carouselImages} />
       </div>
     </div>
   </section>
