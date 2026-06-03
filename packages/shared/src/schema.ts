@@ -69,8 +69,16 @@ export interface Page {
   title: string;
   slug: SanitySlug;
   hero?: Hero;
+  carouselImages?: Figure[];
   body?: SanityBlock[];
   seo?: SEO;
+}
+
+export interface TreatmentSection {
+  _key: string;
+  heading: string;
+  body?: SanityBlock[];
+  image?: Figure;
 }
 
 export interface Service {
@@ -79,6 +87,7 @@ export interface Service {
   slug: SanitySlug;
   excerpt?: string;
   image?: Figure;
+  treatmentSections?: TreatmentSection[];
   body?: SanityBlock[];
   price?: string;
   duration?: string;
@@ -116,6 +125,19 @@ export interface BlogPost {
   publishedAt: string;
   categories?: string[];
   seo?: SEO;
+}
+
+export interface GalleryPost {
+  _id: string;
+  postType: 'single' | 'beforeAfter';
+  image?: Figure;
+  beforeImage?: Figure;
+  afterImage?: Figure;
+  caption: string;
+  treatment: string;
+  consentGiven: boolean;
+  publishedAt: string;
+  order?: number;
 }
 
 export interface FAQ {

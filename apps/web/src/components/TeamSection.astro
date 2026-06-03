@@ -1,5 +1,5 @@
 ---
-import type { TeamMember, SanityBlock } from '@foxhue/shared';
+import type { TeamMember } from '@foxhue/shared';
 import SanityImage from '@components/SanityImage.astro';
 import PortableText from '@components/PortableText.astro';
 import { BOOKING_LINK } from '@lib/constants';
@@ -17,15 +17,6 @@ const teamFallbackPhotos: Record<string, string> = {
   'Katie': '/images/team/katie.jpg',
 };
 
-/**
- * Extract the first paragraph from portable text blocks for a bio excerpt.
- */
-function extractFirstParagraph(bio: SanityBlock[] | undefined): string {
-  if (!bio || bio.length === 0) return '';
-  const firstBlock = bio.find((b) => b._type === 'block');
-  if (!firstBlock) return '';
-  return (firstBlock.children ?? []).map((c) => c.text ?? '').join('');
-}
 
 function hasExpandableContent(member: TeamMember): boolean {
   return !!(member.bio && member.bio.length > 0) || !!(member.qualifications && member.qualifications.length > 0) || !!(member.specialisms && member.specialisms.length > 0);
@@ -35,9 +26,7 @@ function getFirstName(name: string): string {
   return name.split(' ')[0];
 }
 
-function padIndex(i: number): string {
-  return String(i + 1).padStart(2, '0');
-}
+
 ---
 
 <section class="team-section reveal" aria-labelledby="team-heading">
@@ -46,7 +35,6 @@ function padIndex(i: number): string {
   {members.length > 0 ? (
     <div class="team-rows">
       {members.map((member, i) => {
-        const snippet = extractFirstParagraph(member.bio);
         const expandable = hasExpandableContent(member);
         const isReversed = i % 2 === 1;
         const accordionId = `accordion-${member._id}`;
@@ -77,7 +65,7 @@ function padIndex(i: number): string {
                     fetchpriority={i === 0 ? 'high' : undefined}
                   />
                 )}
-                <span class="team-row__number" aria-hidden="true">{padIndex(i)}</span>
+
               </div>
             </div>
 
@@ -94,9 +82,7 @@ function padIndex(i: number): string {
                 </blockquote>
               )}
 
-              {snippet && <p class="team-row__bio">{snippet}</p>}
-
-              {member.specialisms && member.specialisms.length > 0 && (
+{member.specialisms && member.specialisms.length > 0 && (
                 <ul class="team-row__tags" role="list" aria-label={`${member.name}'s specialisms`}>
                   {member.specialisms.map((s) => (
                     <li class="team-row__tag">{s}</li>

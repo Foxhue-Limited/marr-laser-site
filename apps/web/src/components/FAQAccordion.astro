@@ -29,7 +29,7 @@ const hasCategories = grouped.size > 1 || !grouped.has('General');
 
 <section class="faq-section" aria-labelledby="faq-heading">
   <div class="container faq-container">
-    <h2 id="faq-heading" class="section-heading">{heading}</h2>
+    {heading && <h2 id="faq-heading" class="section-heading">{heading}</h2>}
     {faqs.length > 0 ? (
       hasCategories ? (
         Array.from(grouped.entries()).map(([category, items]) => (

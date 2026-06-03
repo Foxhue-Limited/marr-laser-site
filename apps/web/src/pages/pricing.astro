@@ -21,16 +21,16 @@ const grouped = services.reduce<Record<string, Service[]>>((acc, service) => {
   title="Pricing"
   description="Treatment pricing for Marr Laser & Skin Clinic, Paisley. Transparent pricing for laser, skin, aesthetic, PMU, and CACI treatments."
 >
-  <section class="pricing-hero">
+  <section class="page-hero">
     <div class="container">
       <h1 class="pricing-title">Treatment Pricing</h1>
-      <p class="pricing-subtitle">Transparent pricing for all our treatments. Free consultations available.</p>
+      <p class="pricing-subtitle">Transparent pricing for all our treatments. Consultation fees are fully redeemable against treatments or products purchased on the day.</p>
     </div>
   </section>
 
   <section class="pricing-content">
     <div class="container">
-      {Object.entries(grouped).map(([category, categoryServices]) => (
+      {Object.entries(grouped).filter(([category]) => category !== 'All Treatments').map(([category, categoryServices]) => (
         <div class="pricing-category">
           <h2 class="category-title">{category}</h2>
           <div class="pricing-table">
@@ -65,11 +65,6 @@ const grouped = services.reduce<Record<string, Service[]>>((acc, service) => {
 </BaseLayout>
 
 <style>
-  .pricing-hero {
-    background-color: var(--color-accent);
-    padding-block: var(--space-16);
-    text-align: center;
-  }
 
   .pricing-title {
     font-family: var(--font-heading);

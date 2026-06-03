@@ -7,6 +7,7 @@ import {
   ComposeIcon,
   StarIcon,
   HelpCircleIcon,
+  ImagesIcon,
 } from '@sanity/icons'
 
 export const deskStructure = (S: StructureBuilder) =>
@@ -74,5 +75,15 @@ export const deskStructure = (S: StructureBuilder) =>
           S.documentTypeList('faq')
             .title('FAQs')
             .defaultOrdering([{ field: 'order', direction: 'asc' }]),
+        ),
+
+      // Treatment Gallery
+      S.listItem()
+        .title('Treatment Gallery')
+        .icon(ImagesIcon)
+        .child(
+          S.documentTypeList('galleryPost')
+            .title('Gallery Posts')
+            .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
         ),
     ])

@@ -27,6 +27,13 @@ export default defineType({
       type: 'hero',
     }),
     defineField({
+      name: 'carouselImages',
+      title: 'Carousel Images',
+      type: 'array',
+      of: [{ type: 'figure' }],
+      description: 'Images displayed in the hero carousel. Used on the About page.',
+    }),
+    defineField({
       name: 'body',
       title: 'Body',
       type: 'portableText',

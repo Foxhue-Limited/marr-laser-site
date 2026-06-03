@@ -15,17 +15,21 @@ const treatmentCategories = [
   { label: 'Laser Treatments', href: '/services/laser-treatments' },
   { label: 'Skin Treatments', href: '/services/skin-treatments' },
   { label: 'Aesthetic Treatments', href: '/services/aesthetic-treatments' },
-  { label: 'PMU Treatments', href: '/services/pmu-treatments' },
+  { label: 'Semi-Permanent Makeup', href: '/services/pmu-treatments' },
   { label: 'CACI Treatments', href: '/services/caci-treatments' },
+];
+
+const clinicInfoItems = [
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Treatment Gallery', href: '/gallery' },
 ];
 
 const navItems = [
   { label: 'Treatments', href: '/services', children: treatmentCategories },
   { label: 'Pricing', href: '/pricing' },
   { label: 'About', href: '/about' },
-  { label: 'Team', href: '/team' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Clinic Info', href: '/faq', children: clinicInfoItems },
   { label: 'Contact', href: '/contact' },
 ];
 

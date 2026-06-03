@@ -1,0 +1,292 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SanityImage from '@components/SanityImage.astro';
+import CTABanner from '@components/CTABanner.astro';
+import { sanityClient } from '@lib/sanity';
+import { galleryPostsQuery } from '@lib/queries';
+import type { GalleryPost } from '@foxhue/shared';
+
+const posts: GalleryPost[] = await sanityClient.fetch(galleryPostsQuery);
+
+const CATEGORIES = [
+  { label: 'All', value: 'all' },
+  { label: 'Laser', value: 'laser-treatments' },
+  { label: 'Skin', value: 'skin-treatments' },
+  { label: 'Aesthetic', value: 'aesthetic-treatments' },
+  { label: 'Semi-Permanent Makeup', value: 'pmu-treatments' },
+  { label: 'CACI', value: 'caci-treatments' },
+];
+---
+
+<BaseLayout
+  title="Treatment Gallery"
+  description="See real results from MARR Laser & Skin Clinic, Paisley. Before and after photos and treatment imagery from our qualified practitioners."
+>
+  <section class="page-hero gallery-hero">
+    <div class="container">
+      <p class="eyebrow">Our Results</p>
+      <h1 class="gallery-title">Treatment Gallery</h1>
+      <p class="gallery-subtitle">Real results from our clinic. All images published with full patient consent.</p>
+    </div>
+  </section>
+
+  <section class="gallery-content">
+    <div class="container">
+
+      {/* Filter pills */}
+      <div class="gallery-filters" role="group" aria-label="Filter by treatment">
+        {CATEGORIES.map((cat) => (
+          <button
+            type="button"
+            class={`filter-pill${cat.value === 'all' ? ' filter-pill--active' : ''}`}
+            data-filter={cat.value}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {posts.length > 0 ? (
+        <div class="gallery-grid" id="gallery-grid">
+          {posts.map((post) => (
+            <article class="gallery-card" data-treatment={post.treatment}>
+              {post.postType === 'beforeAfter' ? (
+                <div class="gallery-card__images gallery-card__images--pair">
+                  <div class="gallery-card__img-wrap">
+                    <span class="gallery-card__label">Before</span>
+                    {post.beforeImage ? (
+                      <SanityImage
+                        source={post.beforeImage.image}
+                        alt={post.beforeImage.alt || 'Before'}
+                        width={600}
+                        height={600}
+                        class="gallery-card__img"
+                      />
+                    ) : (
+                      <div class="gallery-card__placeholder" />
+                    )}
+                  </div>
+                  <div class="gallery-card__img-wrap">
+                    <span class="gallery-card__label">After</span>
+                    {post.afterImage ? (
+                      <SanityImage
+                        source={post.afterImage.image}
+                        alt={post.afterImage.alt || 'After'}
+                        width={600}
+                        height={600}
+                        class="gallery-card__img"
+                      />
+                    ) : (
+                      <div class="gallery-card__placeholder" />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div class="gallery-card__images">
+                  {post.image ? (
+                    <SanityImage
+                      source={post.image.image}
+                      alt={post.image.alt || post.caption}
+                      width={800}
+                      height={600}
+                      class="gallery-card__img"
+                    />
+                  ) : (
+                    <div class="gallery-card__placeholder" />
+                  )}
+                </div>
+              )}
+              <div class="gallery-card__body">
+                <p class="gallery-card__caption">{post.caption}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p class="gallery-empty">Gallery coming soon.</p>
+      )}
+
+    </div>
+  </section>
+
+  <CTABanner />
+</BaseLayout>
+
+<style>
+
+  .gallery-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-heading-light);
+    color: var(--color-primary);
+    margin-bottom: var(--space-3);
+  }
+
+  .gallery-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--color-neutral-600);
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+
+  .gallery-content {
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  /* Filter pills */
+  .gallery-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-10);
+  }
+
+  .filter-pill {
+    padding: var(--space-2) var(--space-5);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-body-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-neutral-600);
+    background: transparent;
+    border: 1px solid var(--color-secondary);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .filter-pill:hover,
+  .filter-pill--active {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  /* Grid */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Card */
+  .gallery-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base);
+  }
+
+  .gallery-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .gallery-card[hidden] {
+    display: none;
+  }
+
+  /* Images */
+  .gallery-card__images {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .gallery-card__images--pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    aspect-ratio: 2 / 1;
+  }
+
+  .gallery-card__img-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gallery-card__label {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    z-index: 1;
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-body-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-white);
+    background-color: rgba(0,0,0,0.4);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-full);
+  }
+
+  .gallery-card__img,
+  .gallery-card__images :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+  }
+
+  .gallery-card:hover .gallery-card__img,
+  .gallery-card:hover .gallery-card__images :global(img) {
+    transform: scale(1.03);
+  }
+
+  .gallery-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-accent);
+  }
+
+  /* Body */
+  .gallery-card__body {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .gallery-card__caption {
+    font-size: var(--font-size-sm);
+    color: var(--color-neutral-600);
+    line-height: 1.6;
+  }
+
+  .gallery-empty {
+    text-align: center;
+    color: var(--color-neutral-500);
+    font-size: var(--font-size-lg);
+    padding-block: var(--space-12);
+  }
+</style>
+
+<script>
+  const pills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+  const cards = document.querySelectorAll<HTMLElement>('.gallery-card');
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const filter = pill.getAttribute('data-filter');
+
+      pills.forEach((p) => p.classList.remove('filter-pill--active'));
+      pill.classList.add('filter-pill--active');
+
+      cards.forEach((card) => {
+        const treatment = card.getAttribute('data-treatment');
+        card.hidden = filter !== 'all' && treatment !== filter;
+      });
+    });
+  });
+</script>

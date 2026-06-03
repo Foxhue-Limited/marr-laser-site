@@ -29,7 +29,7 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
         </div>
       </div>
       <div class="hero-media">
-        <ImageCarousel />
+        <ImageCarousel images={page?.carouselImages} />
       </div>
     </div>
   </section>
@@ -55,9 +55,13 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
   }
 
   .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr;
-    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+    max-width: 1440px;
+    margin-inline: auto;
+    overflow: hidden;
   }
 
   .hero-content {
@@ -132,8 +136,19 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
 
   @media (min-width: 768px) {
     .hero-inner {
-      grid-template-columns: 1fr 1fr;
-      min-height: 75vh;
+      flex-direction: row;
+      height: 100vh;
+      height: 100svh;
+      min-height: unset;
+    }
+
+    .hero-content {
+      flex: 1;
+    }
+
+    .hero-media {
+      flex: 1;
+      overflow: hidden;
     }
 
     .hero-content {

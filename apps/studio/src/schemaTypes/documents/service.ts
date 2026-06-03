@@ -35,9 +35,17 @@ export default defineType({
       type: 'figure',
     }),
     defineField({
+      name: 'treatmentSections',
+      title: 'Treatment Sections',
+      type: 'array',
+      of: [{ type: 'treatmentSection' }],
+      description: 'Add each treatment as a section with its own heading, description, and image. Use this instead of H2 headings in the Body field below.',
+    }),
+    defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Body (Legacy)',
       type: 'portableText',
+      description: 'Legacy field — use Treatment Sections above for new content.',
     }),
     defineField({
       name: 'price',

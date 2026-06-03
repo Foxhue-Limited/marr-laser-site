@@ -35,6 +35,15 @@ export const siteSettingsQuery = groq`
 // Services
 // ---------------------------------------------------------------------------
 
+const treatmentSectionsFragment = groq`
+  treatmentSections[]{
+    _key,
+    heading,
+    body,
+    image
+  }
+`;
+
 export const servicesQuery = groq`
   *[_type == "service"] | order(featured desc, title asc){
     _id,
@@ -42,6 +51,7 @@ export const servicesQuery = groq`
     slug,
     excerpt,
     image,
+    ${treatmentSectionsFragment},
     body,
     price,
     duration,
@@ -70,6 +80,7 @@ export const serviceBySlugQuery = groq`
     slug,
     excerpt,
     image,
+    ${treatmentSectionsFragment},
     body,
     price,
     duration,
@@ -99,6 +110,10 @@ export const pageBySlugQuery = groq`
     title,
     slug,
     hero,
+    carouselImages[]{
+      image,
+      alt
+    },
     body,
     seo
   }
@@ -179,5 +194,22 @@ export const faqsQuery = groq`
     category,
     service,
     order
+  }
+`;
+
+// ---------------------------------------------------------------------------
+// Gallery
+// ---------------------------------------------------------------------------
+
+export const galleryPostsQuery = groq`
+  *[_type == "galleryPost" && consentGiven == true] | order(coalesce(order, 9999) asc, publishedAt desc){
+    _id,
+    postType,
+    image,
+    beforeImage,
+    afterImage,
+    caption,
+    treatment,
+    publishedAt
   }
 `;
