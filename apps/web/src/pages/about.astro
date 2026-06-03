@@ -55,8 +55,8 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
   }
 
   .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     min-height: 100svh;
     max-width: 1440px;
@@ -135,7 +135,15 @@ const teamMembers: TeamMember[] = await sanityClient.fetch(teamMembersQuery);
 
   @media (min-width: 768px) {
     .hero-inner {
-      grid-template-columns: 1fr 1fr;
+      flex-direction: row;
+    }
+
+    .hero-content {
+      flex: 1;
+    }
+
+    .hero-media {
+      flex: 1;
     }
 
     .hero-content {
