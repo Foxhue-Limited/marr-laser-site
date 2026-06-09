@@ -67,6 +67,12 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'featuredOrder',
+      title: 'Featured Order',
+      type: 'number',
+      description: 'Controls the order of this service in the Featured Treatments section. Lower numbers appear first (1, 2, 3...).',
+    }),
+    defineField({
       name: 'seo',
       title: 'SEO',
       type: 'seo',
