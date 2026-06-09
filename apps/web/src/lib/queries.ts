@@ -61,7 +61,7 @@ export const servicesQuery = groq`
 `;
 
 export const featuredServicesQuery = groq`
-  *[_type == "service" && featured == true] | order(title asc)[0...6]{
+  *[_type == "service" && featured == true] | order(featuredOrder asc, title asc)[0...6]{
     _id,
     title,
     slug,
@@ -69,7 +69,8 @@ export const featuredServicesQuery = groq`
     image,
     price,
     duration,
-    featured
+    featured,
+    featuredOrder
   }
 `;
 
