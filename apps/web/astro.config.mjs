@@ -5,7 +5,7 @@ import { loadEnv } from 'vite';
 const { SANITY_PROJECT_ID } = loadEnv('production', process.cwd(), 'SANITY');
 
 export default defineConfig({
-  site: 'https://marrlaserandskin.com',
+  site: 'https://marrlaserandskinclinic.com',
   output: 'static',
   integrations: [sitemap()],
   vite: {
