@@ -19,6 +19,12 @@ interface Props {
 
 const { title, description, ogImage, transparentHeader = false } = Astro.props;
 
+// Google Tag Manager container ID (e.g. "GTM-XXXXXXX").
+// Set PUBLIC_GTM_ID in the environment to enable GTM; left unset (e.g. local
+// dev) the snippet is omitted entirely. The ID is not secret — it appears in
+// the page source — so PUBLIC_ exposure is expected.
+const gtmId = import.meta.env.PUBLIC_GTM_ID;
+
 const settings: SiteSettings = await sanityClient.fetch(siteSettingsQuery);
 
 const siteTitle = title
@@ -71,6 +77,12 @@ const jsonLd = settings
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
+    {gtmId && (
+      <!-- Google Tag Manager -->
+      <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`} />
+      <!-- End Google Tag Manager -->
+    )}
+
     <SEO
       title={siteTitle}
       description={siteDescription}
@@ -103,6 +115,19 @@ const jsonLd = settings
   </head>
 
   <body>
+    {gtmId && (
+      <!-- Google Tag Manager (noscript) -->
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+          title="Google Tag Manager"
+        ></iframe>
+      </noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    )}
     <a href="#main-content" class="skip-link sr-only">Skip to main content</a>
     <Header
       siteName={settings?.siteName ?? 'MARR Laser & Skin Clinic'}

@@ -81,17 +81,25 @@ npx sanity deploy
 
 Studio deploys to `{client-name}.sanity.studio` (free).
 
-### Astro Site (Vercel)
+### Astro Site (Cloudflare Pages)
 
-1. Connect your GitHub repo to [Vercel](https://vercel.com)
-2. Set root directory to `apps/web`
-3. Add environment variables: `SANITY_PROJECT_ID`, `SANITY_DATASET`
+The site is built and served by **Cloudflare Pages** (it was migrated off Vercel — there is no `vercel.json`; security headers live in `apps/web/public/_headers`).
+
+1. In Cloudflare → **Workers & Pages**, connect the GitHub repo
+2. Build settings:
+   - **Build command:** `npm run build` (builds the `apps/web` workspace)
+   - **Build output directory:** `apps/web/dist`
+3. Add environment variables (Production):
+   - `SANITY_PROJECT_ID`, `SANITY_DATASET`
+   - `PUBLIC_GTM_ID` — Google Tag Manager container ID (omit to disable GTM)
 4. Deploy
+
+> Env var changes only apply to **new** deploys — retry/trigger a deploy after adding or changing one.
 
 ### Auto-rebuilds
 
-1. In Vercel project settings, create a Deploy Hook
-2. In Sanity: Manage → API → Webhooks → add the Vercel deploy hook URL
+1. In Cloudflare Pages → project → Settings, create a **Deploy Hook** (gives you a URL)
+2. In Sanity: Manage → API → Webhooks → add the Cloudflare deploy hook URL
 3. Now publishing content in Sanity automatically triggers a site rebuild (~30-60s)
 
 ### Invite client
