@@ -25,6 +25,12 @@ const { title, description, ogImage, transparentHeader = false } = Astro.props;
 // the page source — so PUBLIC_ exposure is expected.
 const gtmId = import.meta.env.PUBLIC_GTM_ID;
 
+// Cookiebot consent banner — "Domain Group ID" (a UUID) from the Cookiebot
+// dashboard. Set PUBLIC_COOKIEBOT_ID to enable the cookie consent banner +
+// Google Consent Mode v2. Left unset, no banner loads (GTM still defaults to
+// consent "denied" below, so no non-essential cookies are set either way).
+const cookiebotId = import.meta.env.PUBLIC_COOKIEBOT_ID;
+
 const settings: SiteSettings = await sanityClient.fetch(siteSettingsQuery);
 
 const siteTitle = title
@@ -76,6 +82,37 @@ const jsonLd = settings
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    {/*
+      Consent order matters and must come before any tags fire:
+      1. Cookiebot loader (first script in <head>) — blocks non-essential
+         trackers until the visitor chooses.
+      2. Consent Mode v2 default = denied — so GTM/Google tags collect nothing
+         (cookieless modelled mode) until consent is granted.
+      3. Consent bridge — maps Cookiebot's choice to Google's consent signals
+         (works on the free tier regardless of Cookiebot's auto-signalling).
+      4. Google Tag Manager.
+    */}
+    {cookiebotId && (
+      <script
+        id="Cookiebot"
+        src="https://consent.cookiebot.com/uc.js"
+        data-cbid={cookiebotId}
+        data-blockingmode="auto"
+        type="text/javascript"
+        is:inline
+      />
+    )}
+
+    {gtmId && (
+      <!-- Consent Mode v2 default state -->
+      <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'denied',personalization_storage:'denied',security_storage:'granted',wait_for_update:500});gtag('set','ads_data_redaction',true);gtag('set','url_passthrough',true);`} />
+    )}
+
+    {cookiebotId && gtmId && (
+      <!-- Bridge Cookiebot consent → Google Consent Mode -->
+      <script is:inline set:html={`window.addEventListener('CookiebotOnConsentReady',function(){if(typeof Cookiebot==='undefined'||!Cookiebot.consent)return;var c=Cookiebot.consent;gtag('consent','update',{ad_storage:c.marketing?'granted':'denied',ad_user_data:c.marketing?'granted':'denied',ad_personalization:c.marketing?'granted':'denied',analytics_storage:c.statistics?'granted':'denied',functionality_storage:c.preferences?'granted':'denied',personalization_storage:c.preferences?'granted':'denied'});});`} />
+    )}
 
     {gtmId && (
       <!-- Google Tag Manager -->

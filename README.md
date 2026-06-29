@@ -92,6 +92,8 @@ The site is built and served by **Cloudflare Pages** (it was migrated off Vercel
 3. Add environment variables (Production):
    - `SANITY_PROJECT_ID`, `SANITY_DATASET`
    - `PUBLIC_GTM_ID` — Google Tag Manager container ID (omit to disable GTM)
+   - `PUBLIC_COOKIEBOT_ID` — Cookiebot Domain Group ID; enables the cookie
+     consent banner + Google Consent Mode v2 (omit to disable the banner)
 4. Deploy
 
 > Env var changes only apply to **new** deploys — retry/trigger a deploy after adding or changing one.
