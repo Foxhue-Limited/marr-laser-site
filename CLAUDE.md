@@ -16,9 +16,37 @@ Astro + Sanity CMS production website for MARR Laser & Skin Clinic, Paisley.
 - See `MARR_DESIGN_SYSTEM.md` for full design system reference
 
 ## Structure
-- `apps/web` — Astro frontend (SSG, deploys to Vercel)
+- `apps/web` — Astro frontend (SSG, deploys to Cloudflare Pages)
 - `apps/studio` — Sanity Studio (deploys to marr-laser.sanity.studio)
 - `packages/shared` — Shared TypeScript types
+
+## Deployment
+- **Host: Cloudflare Pages** (project `marr-laser-site`) — *not* Vercel. The site
+  was migrated; `vercel.json` has been deleted and any `.vercel/` directory left
+  locally is a stale artefact (gitignored).
+- Live site: https://marrlaserandskinclinic.com — also set as `site` in
+  `apps/web/astro.config.mjs` for canonicals and the sitemap.
+- Build output: `apps/web/dist`. Merges to `main` trigger a production deploy;
+  PRs get a preview deploy that reports back as a check.
+- **HTTP headers live in `apps/web/public/_headers`.** Cloudflare Pages reads
+  this from the root of the build output, and `public/` is copied to `dist/` at
+  build time. Cloudflare ignores `vercel.json`, so headers defined there were
+  never actually applied — edit `_headers` only.
+- The CSP in `_headers` whitelists GTM, GA4, Google Ads, Meta Pixel, Cookiebot,
+  Sanity CDN, Phorest, YouTube and Elfsight. Any new third-party tag (added via
+  GTM or otherwise) loads from a domain not on that list and will be **silently
+  blocked** until added. See the comment block at the top of the file.
+- **Each line in `_headers` has a 2,000 character limit.** Cloudflare drops an
+  over-length line silently — the build succeeds and the deploy reports green
+  while the header stops being served. This has bitten us once already. After
+  any CSP change, check the length and confirm the header survives deploy:
+  ```
+  awk '/^  Content-Security-Policy:/ { print length($0) }' apps/web/public/_headers
+  curl -sSI https://marrlaserandskinclinic.com/ | grep -i content-security-policy
+  ```
+  Consolidate same-vendor hosts into a wildcard for room; do not split the
+  policy across two lines (Cloudflare comma-joins them into two policies that
+  must both pass).
 
 ## Pages
 - `/` — Homepage (hero, pathway cards, clinic feature, featured treatments, testimonials, CTA)
