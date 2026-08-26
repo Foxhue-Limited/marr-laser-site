@@ -15,15 +15,37 @@
 #
 # GOOGLE ADS: conversion tracking + remarketing domains follow
 # https://developers.google.com/tag-platform/security/guides/csp —
-# googleadservices.com, googleads.g.doubleclick.net, pagead2.googlesyndication.com,
-# ad.doubleclick.net and google.com/google.co.uk. Google's docs specify
-# `www.google.<TLD>` for the country-level ping (ga-audiences); only .com and
-# .co.uk are listed here, so visitors browsing from a non-UK Google TLD may drop
-# that one remarketing ping. Add further TLDs here if Ads reports gaps.
+# googleadservices.com, *.doubleclick.net, pagead2.googlesyndication.com and
+# google.com/google.co.uk. Google's docs specify `www.google.<TLD>` for the
+# country-level ping (ga-audiences); only .com and .co.uk are listed here, so
+# visitors browsing from a non-UK Google TLD may drop that one remarketing ping.
+# Add further TLDs here if Ads reports gaps.
+#
+# !! 2,000 CHARACTER LIMIT - READ BEFORE EDITING THE CSP !!
+# Cloudflare Pages enforces a 2,000 character limit on each LINE of this file
+# (name + value + indentation). A line over the limit is dropped SILENTLY: the
+# build still succeeds, the deploy still reports green, and the header simply
+# stops being served. This already happened once — the CSP hit 2,055 chars and
+# the live site served no CSP at all until it was shortened.
+#
+# The CSP line is currently ~1,690 chars. Before pushing any CSP change, check:
+#
+#   awk '/^  Content-Security-Policy:/ { print length($0) }' apps/web/public/_headers
+#
+# and confirm the live header actually survives after deploy:
+#
+#   curl -sSI https://marrlaserandskinclinic.com/ | grep -i content-security-policy
+#
+# If you need room, consolidate same-vendor hosts into one wildcard rather than
+# dropping sources — `https://*.doubleclick.net` covers googleads.g / stats.g /
+# td / ad, and CSP host wildcards match multi-level subdomains. Splitting the
+# policy across two lines does NOT work: Cloudflare comma-joins duplicate
+# headers, and browsers treat that as two policies that must BOTH pass, which is
+# stricter than intended and will break tracking.
 
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: payment=(self "https://www.phorest.com")
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://consent.cookiebot.com https://consentcdn.cookiebot.com https://www.googletagmanager.com https://tagmanager.google.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com https://www.google.com https://connect.facebook.net https://elfsightcdn.com https://*.elfsight.com; style-src 'self' 'unsafe-inline' https://consentcdn.cookiebot.com https://fonts.googleapis.com https://tagmanager.google.com https://*.elfsight.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https://imgsct.cookiebot.com https://consent.cookiebot.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.g.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com https://www.google.com https://google.com https://www.google.co.uk https://www.facebook.com https://cdn.sanity.io https://img.youtube.com https://*.cdninstagram.com https://*.fbcdn.net https://*.elfsightcdn.com data:; frame-src https://consentcdn.cookiebot.com https://www.googletagmanager.com https://td.doubleclick.net https://*.doubleclick.net https://www.google.com https://www.phorest.com https://phorest.com https://www.youtube-nocookie.com https://*.elfsight.com; frame-ancestors 'none'; connect-src 'self' https://consent.cookiebot.com https://consentcdn.cookiebot.com https://www.googletagmanager.com https://tagmanager.google.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://stats.g.doubleclick.net https://ad.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com https://www.google.com https://google.com https://www.google.co.uk https://connect.facebook.net https://www.facebook.com https://*.sanity.io https://*.apicdn.sanity.io https://*.elfsight.com https://elfsightcdn.com
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://*.cookiebot.com https://*.googletagmanager.com https://tagmanager.google.com https://*.google-analytics.com https://www.googleadservices.com https://*.doubleclick.net https://pagead2.googlesyndication.com https://www.google.com https://connect.facebook.net https://elfsightcdn.com https://*.elfsight.com; style-src 'self' 'unsafe-inline' https://*.cookiebot.com https://fonts.googleapis.com https://tagmanager.google.com https://*.elfsight.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https://*.cookiebot.com https://*.googletagmanager.com https://*.google-analytics.com https://*.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com https://www.google.com https://google.com https://www.google.co.uk https://www.facebook.com https://cdn.sanity.io https://img.youtube.com https://*.cdninstagram.com https://*.fbcdn.net https://*.elfsightcdn.com data:; frame-src https://*.cookiebot.com https://*.googletagmanager.com https://*.doubleclick.net https://www.google.com https://www.phorest.com https://phorest.com https://www.youtube-nocookie.com https://*.elfsight.com; frame-ancestors 'none'; connect-src 'self' https://*.cookiebot.com https://*.googletagmanager.com https://tagmanager.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com https://www.google.com https://google.com https://www.google.co.uk https://connect.facebook.net https://www.facebook.com https://*.sanity.io https://*.elfsight.com https://elfsightcdn.com
