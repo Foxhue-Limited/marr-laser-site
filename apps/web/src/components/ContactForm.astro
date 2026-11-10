@@ -19,7 +19,6 @@ const ccEmail = import.meta.env.PUBLIC_CONTACT_FORM_CC?.trim();
 
 const recipient = overrideEmail || email?.trim();
 const formAction = recipient ? `https://formsubmit.co/${recipient}` : undefined;
-const isProd = import.meta.env.PROD;
 ---
 
 <section class="contact-section" aria-labelledby="contact-heading">
@@ -34,7 +33,15 @@ const isProd = import.meta.env.PROD;
       <!-- formsubmit.co configuration -->
       <input type="hidden" name="_next" value={`${Astro.url.origin}/thank-you/`} />
       <input type="hidden" name="_subject" value="New contact form submission" />
-      <input type="hidden" name="_captcha" value={isProd ? 'true' : 'false'} />
+      {/*
+        FormSubmit's reCAPTCHA is deliberately off. With it on, pressing Send
+        took the visitor off-site to a FormSubmit "I'm not a robot" page and
+        nothing was sent unless they ticked the box, which silently lost
+        enquiries from paid traffic. Spam protection is the honeypot below.
+        If spam becomes a problem, do not switch this back on: move to an
+        on-site form with an invisible check (e.g. Cloudflare Turnstile).
+      */}
+      <input type="hidden" name="_captcha" value="false" />
       {ccEmail && <input type="hidden" name="_cc" value={ccEmail} />}
       <!-- Honeypot field for spam prevention -->
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
