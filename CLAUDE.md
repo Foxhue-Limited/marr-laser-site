@@ -56,6 +56,7 @@ Astro + Sanity CMS production website for MARR Laser & Skin Clinic, Paisley.
 - `/about` — Clinic story + team
 - `/team` — Dedicated team page
 - `/contact` — Contact form + location + hours
+- `/thank-you` — Contact form confirmation (FormSubmit `_next` target; noindex, not in sitemap)
 - `/faq` — FAQ accordion
 
 ## MARR-Specific Components
@@ -87,6 +88,8 @@ Astro + Sanity CMS production website for MARR Laser & Skin Clinic, Paisley.
 - Images use @sanity/image-url for WebP + CDN
 - Rich text uses astro-portabletext
 - Forms use formsubmit.co (no backend)
+  - Recipient is the Sanity Site Settings contact email; override with `PUBLIC_CONTACT_FORM_EMAIL`, copy with `PUBLIC_CONTACT_FORM_CC`
+  - A new recipient address must be activated via FormSubmit's "Activate Form" email before anything is delivered
 - Heading font-weight: 300 (light), uppercase, letter-spacing 0.1em
 - Body font-weight: 300 (light), letter-spacing 0.02em
 - Buttons: pill-shaped (border-radius: var(--radius-lg)), Cormorant 400, 11px, uppercase

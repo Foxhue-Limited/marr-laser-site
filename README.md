@@ -94,6 +94,8 @@ The site is built and served by **Cloudflare Pages** (it was migrated off Vercel
    - `PUBLIC_GTM_ID` — Google Tag Manager container ID (omit to disable GTM)
    - `PUBLIC_COOKIEBOT_ID` — Cookiebot Domain Group ID; enables the cookie
      consent banner + Google Consent Mode v2 (omit to disable the banner)
+   - `PUBLIC_CONTACT_FORM_EMAIL` / `PUBLIC_CONTACT_FORM_CC` — optional contact
+     form overrides (see [Contact form](#contact-form) below)
 4. Deploy
 
 > Env var changes only apply to **new** deploys — retry/trigger a deploy after adding or changing one.
@@ -103,6 +105,27 @@ The site is built and served by **Cloudflare Pages** (it was migrated off Vercel
 1. In Cloudflare Pages → project → Settings, create a **Deploy Hook** (gives you a URL)
 2. In Sanity: Manage → API → Webhooks → add the Cloudflare deploy hook URL
 3. Now publishing content in Sanity automatically triggers a site rebuild (~30-60s)
+
+### Contact form
+
+The contact form posts to [FormSubmit](https://formsubmit.co) and is delivered
+to the **Contact Email in Sanity Site Settings** (the same address shown on the
+contact page). After sending, the visitor passes FormSubmit's reCAPTCHA page and
+is redirected to `/thank-you/`.
+
+- **Activation:** FormSubmit delivers nothing to an address until someone clicks
+  the "Activate Form" link it emails there on the first submission. Changing the
+  Contact Email in Sanity therefore needs a new activation — submit the form
+  once and click the link, or enquiries are held (for 30 days) and not delivered.
+- **Testing with your own mailbox:** set `PUBLIC_CONTACT_FORM_EMAIL` (Preview
+  environment in Cloudflare, or `.env` locally) to send submissions to that
+  address instead, without changing the email shown on the site.
+- **Monitoring:** set `PUBLIC_CONTACT_FORM_CC` to copy every submission to a
+  second address. Enquiries contain personal data — only copy them to someone
+  entitled to see them.
+- **Conversions:** a page view of `/thank-you/` means a message was accepted,
+  so it can be used as the lead-conversion trigger in Google Tag Manager.
+- FormSubmit emails can land in spam; ask the recipient to mark them "not spam".
 
 ### Invite client
 

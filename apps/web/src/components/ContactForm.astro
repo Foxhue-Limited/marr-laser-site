@@ -1,27 +1,41 @@
 ---
 interface Props {
-  email: string;
+  /** Clinic contact email from Sanity Site Settings — the default recipient. */
+  email?: string;
 }
 
 const { email } = Astro.props;
 
-const formAction = `https://formsubmit.co/${email}`;
+// Optional overrides, set as environment variables on the host (see README):
+// - PUBLIC_CONTACT_FORM_EMAIL sends submissions to this address INSTEAD of the
+//   Sanity contact email, without changing the address shown on the page. Use
+//   it on a preview deploy to test the form with a mailbox you control.
+// - PUBLIC_CONTACT_FORM_CC copies every submission to this address as well.
+// Neither is secret (both appear in the page source), hence the PUBLIC_ prefix.
+// A new recipient must be activated with FormSubmit before it receives mail:
+// the first submission triggers an "Activate Form" email to that address.
+const overrideEmail = import.meta.env.PUBLIC_CONTACT_FORM_EMAIL?.trim();
+const ccEmail = import.meta.env.PUBLIC_CONTACT_FORM_CC?.trim();
+
+const recipient = overrideEmail || email?.trim();
+const formAction = recipient ? `https://formsubmit.co/${recipient}` : undefined;
 const isProd = import.meta.env.PROD;
 ---
 
 <section class="contact-section" aria-labelledby="contact-heading">
   <div class="container form-container">
     <h2 id="contact-heading" class="section-heading">Get in Touch</h2>
+    {formAction ? (
     <form
       action={formAction}
       method="POST"
       class="contact-form"
-      novalidate
     >
       <!-- formsubmit.co configuration -->
-      <input type="hidden" name="_next" value={`${Astro.url.origin}/thank-you`} />
+      <input type="hidden" name="_next" value={`${Astro.url.origin}/thank-you/`} />
       <input type="hidden" name="_subject" value="New contact form submission" />
       <input type="hidden" name="_captcha" value={isProd ? 'true' : 'false'} />
+      {ccEmail && <input type="hidden" name="_cc" value={ccEmail} />}
       <!-- Honeypot field for spam prevention -->
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
 
@@ -98,6 +112,12 @@ const isProd = import.meta.env.PROD;
         </button>
       </div>
     </form>
+    ) : (
+      <p class="form-unavailable">
+        Our online form is unavailable at the moment. Please call, WhatsApp or
+        email us using the details on this page.
+      </p>
+    )}
   </div>
 </section>
 
@@ -117,6 +137,11 @@ const isProd = import.meta.env.PROD;
     color: var(--color-neutral-900);
     text-align: center;
     margin-bottom: var(--space-12);
+  }
+
+  .form-unavailable {
+    text-align: center;
+    color: var(--color-neutral-700);
   }
 
   .contact-form {
