@@ -15,9 +15,11 @@ interface Props {
   description?: string;
   ogImage?: string;
   transparentHeader?: boolean;
+  /** Keep the page out of search results (e.g. the form thank-you page). */
+  noindex?: boolean;
 }
 
-const { title, description, ogImage, transparentHeader = false } = Astro.props;
+const { title, description, ogImage, transparentHeader = false, noindex = false } = Astro.props;
 
 // Google Tag Manager container ID (e.g. "GTM-XXXXXXX").
 // Set PUBLIC_GTM_ID in the environment to enable GTM; left unset (e.g. local
@@ -123,6 +125,7 @@ const jsonLd = settings
     <SEO
       title={siteTitle}
       description={siteDescription}
+      noindex={noindex}
       {...(siteOgImage && {
         openGraph: {
           basic: {

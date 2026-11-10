@@ -1,0 +1,96 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+{/*
+  Destination for the contact form's `_next` redirect (see ContactForm.astro).
+  FormSubmit sends the visitor here once their message has been accepted, so a
+  page view of /thank-you/ is also a reliable trigger for a "lead" conversion
+  in Google Tag Manager. Kept out of search results and the sitemap.
+*/}
+<BaseLayout
+  title="Thank You"
+  description="Thank you for getting in touch. We will reply as soon as we can."
+  noindex
+>
+  <section class="thank-you" aria-labelledby="thank-you-heading">
+    <div class="container">
+      <span class="eyebrow">Message sent</span>
+      <h1 id="thank-you-heading">Thank You</h1>
+      <p>
+        Your message is on its way to us and we will reply as soon as we can.
+        If your enquiry is urgent, please call the clinic or message us on
+        WhatsApp.
+      </p>
+      <div class="thank-you-actions">
+        <a href="/services/" class="primary-link">View Treatments</a>
+        <a href="/" class="secondary-link">Back to Homepage</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thank-you {
+    padding-block: var(--space-24);
+    text-align: center;
+  }
+
+  .thank-you .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .thank-you h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  .thank-you p {
+    color: var(--color-neutral-700);
+    max-width: 32rem;
+  }
+
+  .thank-you-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+
+  .primary-link,
+  .secondary-link {
+    display: inline-block;
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-body-medium);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .primary-link {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+  }
+
+  .primary-link:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+  }
+
+  .secondary-link {
+    border: 1px solid var(--color-secondary);
+    color: var(--color-neutral-900);
+  }
+
+  .secondary-link:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+  }
+</style>
