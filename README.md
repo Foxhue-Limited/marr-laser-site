@@ -110,8 +110,15 @@ The site is built and served by **Cloudflare Pages** (it was migrated off Vercel
 
 The contact form posts to [FormSubmit](https://formsubmit.co) and is delivered
 to the **Contact Email in Sanity Site Settings** (the same address shown on the
-contact page). After sending, the visitor passes FormSubmit's reCAPTCHA page and
-is redirected to `/thank-you/`.
+contact page). After sending, the visitor is redirected straight to
+`/thank-you/`.
+
+- **No captcha step:** FormSubmit's reCAPTCHA page is switched off
+  (`_captcha=false`). With it on, visitors were taken off-site to an "I'm not a
+  robot" page and nothing was sent unless they ticked the box. Spam protection
+  is the hidden honeypot field. If spam becomes a problem, move to an on-site
+  form with an invisible check (e.g. Cloudflare Turnstile) rather than turning
+  the captcha back on.
 
 - **Activation:** FormSubmit delivers nothing to an address until someone clicks
   the "Activate Form" link it emails there on the first submission. Changing the
